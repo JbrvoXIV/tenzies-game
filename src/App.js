@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react"
+import Dice from "./components/Dice"
+import "./styles/App.css"
 
-function App() {
+const App = () => {
+    
+  const [dice, setDice] = useState(() => {
+    return Array.from({ length: 10 }, () => Math.ceil(Math.random() * 6))
+  })
+  
+  const newDice = () => {
+    setDice(Array.from({ length: 10 }, () => Math.ceil(Math.random() * 6)))
+  }
+
+  const diceElements = dice.map(dice => {
+    return (
+      <Dice value={dice} />
+    )
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <main className="tenzies-container">
+      <h1 className="tenzies-header">Tenzies</h1>
+      <p className="tenzies-description">
+        Roll until all dice are the same. 
+        Click each die to freeze it at its current value between rolls.
+      </p>
+      <div className="tenzies-dice-container">
+        {diceElements}
+      </div>
+      <button className="tenzies-roll" onClick={newDice}>Roll</button>
+    </main>
+  )
 }
 
 export default App;
