@@ -62,14 +62,14 @@ const App = () => {
     <main className="tenzies-container">
       <h1 className="tenzies-header">Tenzies</h1>
       <p className="tenzies-description">
-        Roll until all dice are the same. 
-        Click each die to freeze it at its current value between rolls.
+        {gameWon ? "You've Won!" : 
+        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
       </p>
       <div className="tenzies-dice-container">
         {gameWon && <Confetti />}
         {diceElements}
       </div>
-      <button className="tenzies-roll" onClick={newDice}>
+      <button className="tenzies-roll-button" onClick={newDice}>
         {gameWon ? "Play Again" : "Roll"}
       </button>
     </main>
