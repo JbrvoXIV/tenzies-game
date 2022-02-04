@@ -2,9 +2,13 @@ import React from "react"
 
 const Dice = ({ holdDice, value, isHeld }) => {
 
+    const Pip = () => <span className="pip"></span>
+
     const styles = {
-        backgroundColor: isHeld ? "#1fde58" : "white"
+        backgroundColor: isHeld ? "#59E391" : "white"
     }
+
+    const pipElement = Array.from({ length: value }, (_, i) => <Pip key={i} />)
 
     return (
         <div 
@@ -12,7 +16,7 @@ const Dice = ({ holdDice, value, isHeld }) => {
             onClick={holdDice}
             style={styles}
         >
-            {value}
+            {pipElement}
         </div>
     )
 }

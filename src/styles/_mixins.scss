@@ -5,8 +5,8 @@
     margin-inline-end: 0;
 }
 
-@mixin responsiveContainer {
-    @media screen and (max-width: 640px) {
+@mixin responsiveText {
+    @media screen and (max-width: 600px) {
         @content
     }
 }
