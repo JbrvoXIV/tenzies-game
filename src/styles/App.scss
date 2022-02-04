@@ -30,7 +30,7 @@ body {
     align-items: center;
     flex-flow: column nowrap; 
     max-width: 45%;
-    min-width: 600px;
+    min-width: 400px;
     height: 500px;
     background-color: white;
     border-radius: 5px;
@@ -42,12 +42,14 @@ body {
 .tenzies-header {
     font-size: 3em;
     @include marginReset;
+    cursor: default;
 }
 
 .tenzies-description {
     font-size: 1.3em;
     padding: 0 20px;
     @include marginReset;
+    cursor: default;
 }
 
 .tenzies-roll {
@@ -69,13 +71,14 @@ body {
 
 .tenzies-dice-container {
     display: grid;
-    grid-template: 70px 70px / 70px 70px 70px 70px 70px;    
+    grid-template: 
+    minmax(40px, 70px) minmax(40px, 70px) 
+    / minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px);    
     gap: 20px;
 
     .tenzies-dice {
-        background-color: white;
-        width: 70px;
-        height: 70px;
+        // width: 70px;
+        // height: 70px;
         box-shadow: 2px 2px 5px grey;
         border-radius: 5px;
         display: flex;
@@ -84,5 +87,10 @@ body {
         font-size: 2em;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         font-weight: 700;
+        cursor: pointer;
     }
+}
+
+@include responsiveContainer {
+
 }

@@ -41,7 +41,7 @@ body,
       -ms-flex-flow: column nowrap;
           flex-flow: column nowrap;
   max-width: 45%;
-  min-width: 600px;
+  min-width: 400px;
   height: 500px;
   background-color: white;
   border-radius: 5px;
@@ -61,6 +61,7 @@ body,
           margin-inline-start: 0;
   -webkit-margin-end: 0;
           margin-inline-end: 0;
+  cursor: default;
 }
 
 .tenzies-description {
@@ -74,6 +75,7 @@ body,
           margin-inline-start: 0;
   -webkit-margin-end: 0;
           margin-inline-end: 0;
+  cursor: default;
 }
 
 .tenzies-roll {
@@ -97,16 +99,13 @@ body,
 .tenzies-dice-container {
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: 70px 70px;
-  -ms-grid-columns: 70px 70px 70px 70px 70px;
-      grid-template: 70px 70px / 70px 70px 70px 70px 70px;
+  -ms-grid-rows: minmax(40px, 70px) minmax(40px, 70px);
+  -ms-grid-columns: minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px);
+      grid-template: minmax(40px, 70px) minmax(40px, 70px)/minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px) minmax(40px, 70px);
   gap: 20px;
 }
 
 .tenzies-dice-container .tenzies-dice {
-  background-color: white;
-  width: 70px;
-  height: 70px;
   -webkit-box-shadow: 2px 2px 5px grey;
           box-shadow: 2px 2px 5px grey;
   border-radius: 5px;
@@ -122,5 +121,6 @@ body,
   font-size: 2em;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-weight: 700;
+  cursor: pointer;
 }
 /*# sourceMappingURL=App.css.map */

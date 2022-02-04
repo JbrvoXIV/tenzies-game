@@ -1,8 +1,19 @@
 import React from "react"
 
-const Dice = (props) => {
+const Dice = ({ holdDice, value, isHeld }) => {
+
+    const styles = {
+        backgroundColor: isHeld ? "#1fde58" : "white"
+    }
+
     return (
-        <div className="tenzies-dice">{props.value}</div>
+        <div 
+            className="tenzies-dice" 
+            onClick={holdDice}
+            style={styles}
+        >
+            {value}
+        </div>
     )
 }
 
