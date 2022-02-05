@@ -16,6 +16,8 @@ const App = () => {
 
   const [gameWon, setGameWon] = useState(false)
 
+  const [amountRolls, setAmountRolls] = useState(0)
+
   useEffect(() => {
     const value = dice[0].value
     if(dice.every(dice => dice.isHeld) && dice.every(dice => dice.value === value))
@@ -47,6 +49,13 @@ const App = () => {
     }))
   }
 
+  const updateRollAmount = () => {
+    if(gameWon)
+      setAmountRolls(0)
+    else
+      setAmountRolls(oldAmount => oldAmount + 1)
+  }
+
   const diceElements = dice.map(dice => {
     return (
       <Dice 
@@ -60,18 +69,25 @@ const App = () => {
 
   return (
     <main className="tenzies-container">
+      {gameWon && <Confetti />}
       <h1 className="tenzies-header">Tenzies</h1>
       <p className="tenzies-description">
         {gameWon ? "You've Won!" : 
         "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
       </p>
       <div className="tenzies-dice-container">
-        {gameWon && <Confetti />}
         {diceElements}
       </div>
-      <button className="tenzies-roll-button" onClick={newDice}>
+      <button 
+        className="tenzies-roll-button" 
+        onClick={() => {
+          newDice();
+          updateRollAmount();
+        }}
+      >
         {gameWon ? "Play Again" : "Roll"}
       </button>
+      <p className="roll-counter">Amount of Rolls: {amountRolls}</p>
     </main>
   )
 }

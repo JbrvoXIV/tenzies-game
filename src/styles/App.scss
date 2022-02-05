@@ -135,6 +135,11 @@ body {
     }
 }
 
+.roll-counter {
+    font-size: 1.1em;
+    cursor: default;
+}
+
 @include responsiveText {
     .tenzies-container {
         font-size: 12px;
