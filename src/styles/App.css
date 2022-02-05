@@ -196,6 +196,11 @@ body,
   grid-area: g;
 }
 
+.roll-counter {
+  font-size: 1.1em;
+  cursor: default;
+}
+
 @media screen and (max-width: 600px) {
   .tenzies-container {
     font-size: 12px;
