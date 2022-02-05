@@ -135,8 +135,16 @@ body {
     }
 }
 
-.roll-counter {
-    font-size: 1.1em;
+// .roll-counter {
+//     cursor: default;
+// }
+
+.statistics-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 1.2em;
     cursor: default;
 }
 

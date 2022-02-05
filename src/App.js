@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Dice from "./components/Dice"
+import Statistics from "./components/Statistics"
 import "./styles/App.css"
 import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
@@ -17,6 +18,10 @@ const App = () => {
   const [gameWon, setGameWon] = useState(false)
 
   const [amountRolls, setAmountRolls] = useState(0)
+
+  const [timer, setTimer] = useState({ minutes: "00", seconds: "00" })
+
+  const [clicked, setClicked] = useState(false)
 
   useEffect(() => {
     const value = dice[0].value
@@ -56,6 +61,22 @@ const App = () => {
       setAmountRolls(oldAmount => oldAmount + 1)
   }
 
+  const startTimer = () => {
+    if(!clicked) {
+      setClicked(true)
+      setInterval(() => {
+        setTimer(oldTime => ({
+          minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
+                    : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
+                    : oldTime.minutes,
+          seconds: parseInt(oldTime.seconds) === 59 ? "00" 
+                    : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
+                    : (parseInt(oldTime.seconds) + 1).toString()
+        }))
+      }, 1000);
+    }
+  }
+
   const diceElements = dice.map(dice => {
     return (
       <Dice 
@@ -83,11 +104,15 @@ const App = () => {
         onClick={() => {
           newDice();
           updateRollAmount();
+          startTimer();
         }}
       >
         {gameWon ? "Play Again" : "Roll"}
       </button>
-      <p className="roll-counter">Amount of Rolls: {amountRolls}</p>
+      <Statistics 
+        amountRolls={amountRolls}
+        timer={timer}
+      />
     </main>
   )
 }
