@@ -21,9 +21,9 @@ const App = () => {
 
   const [timer, setTimer] = useState({ minutes: "00", seconds: "00" })
 
-  const timerRef = useRef(false)
-
   const firstRenderRef = useRef(true)
+
+  const timeIntervalRef = useRef(0)
   
   useEffect(() => {
     const value = dice[0].value
@@ -33,29 +33,26 @@ const App = () => {
   
   useEffect(() => {
 
-    let timeInterval
 
     if (firstRenderRef.current) {
       firstRenderRef.current = false
     } else {
-      if(!timerRef.current) {
-        timerRef.current = true
-        timeInterval = setInterval(() => {
-          setTimer(oldTime => ({
-            minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
-            : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
-            : oldTime.minutes,
-            seconds: parseInt(oldTime.seconds) === 59 ? "00" 
-            : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
-            : (parseInt(oldTime.seconds) + 1).toString()
-          }))
-        }, 1000)
+      if(!timeIntervalRef.current) {
+        timeIntervalRef.current = setInterval(() => {
+              setTimer(oldTime => ({
+                minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
+                : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
+                : oldTime.minutes,
+                seconds: parseInt(oldTime.seconds) === 59 ? "00" 
+                : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
+                : (parseInt(oldTime.seconds) + 1).toString()
+              }))
+            }, 1000)
       }
     }
 
-    if(gameWon) {
-      console.log("Game Won")
-      clearInterval(timeInterval)
+    if (gameWon) {
+      clearInterval(timeIntervalRef.current)
     }
 
   }, [dice, gameWon])
