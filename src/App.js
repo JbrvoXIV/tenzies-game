@@ -21,38 +21,59 @@ const App = () => {
 
   const [timer, setTimer] = useState({ minutes: "00", seconds: "00" })
 
+  const [bestTime, setBestTime] = useState({ minutes: "00", seconds: "00" })
+
   const firstRenderRef = useRef(true)
 
   const timeIntervalRef = useRef(0)
   
+  // GAME WON HANDLER
   useEffect(() => {
     const value = dice[0].value
     if(dice.every(dice => dice.isHeld) && dice.every(dice => dice.value === value))
     setGameWon(true)
   }, [dice])
   
+  // SAVE BEST TIME TO LOCAL STORAGE
+  useEffect(() => {
+    if(gameWon) {
+      localStorage.setItem("bestTime", JSON.stringify(timer))
+
+      parseInt(bestTime.minutes) + parseInt(bestTime.seconds) 
+      > parseInt(JSON.parse(localStorage.getItem("bestTime")).minutes) + parseInt(JSON.parse(localStorage.getItem("bestTime")).seconds)
+      ? setBestTime(({
+          minutes: JSON.parse(localStorage.getItem("bestTime")).minutes,
+          seconds: JSON.parse(localStorage.getItem("bestTime")).seconds
+        }))
+      : setBestTime(oldTime => ({...oldTime}))
+    }
+  }, [gameWon])
+
+  // TIMER HANDLER 
   useEffect(() => {
 
-
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false
-    } else {
-      if(!timeIntervalRef.current) {
-        timeIntervalRef.current = setInterval(() => {
-              setTimer(oldTime => ({
-                minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
-                : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
-                : oldTime.minutes,
-                seconds: parseInt(oldTime.seconds) === 59 ? "00" 
-                : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
-                : (parseInt(oldTime.seconds) + 1).toString()
-              }))
-            }, 1000)
-      }
-    }
-
-    if (gameWon) {
+    if(gameWon) {
+      firstRenderRef.current = true
       clearInterval(timeIntervalRef.current)
+      timeIntervalRef.current = 0
+    } else {
+      if (firstRenderRef.current) {
+        setTimer(({ minutes: "00", seconds: "00" }))
+        firstRenderRef.current = false
+      } else {
+        if(!timeIntervalRef.current) {
+          timeIntervalRef.current = setInterval(() => {
+            setTimer(oldTime => ({
+              minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
+              : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
+              : oldTime.minutes,
+              seconds: parseInt(oldTime.seconds) === 59 ? "00" 
+              : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
+              : (parseInt(oldTime.seconds) + 1).toString()
+            }))
+          }, 1000)
+        }
+      }
     }
 
   }, [dice, gameWon])
@@ -82,6 +103,7 @@ const App = () => {
     }))
   }
 
+  // UPDATES ROLL AMOUNT ON GAME WON
   const updateRollAmount = () => {
     if(gameWon)
       setAmountRolls(0)
@@ -123,6 +145,7 @@ const App = () => {
       <Statistics 
         amountRolls={amountRolls}
         timer={timer}
+        bestTime={bestTime}
       />
     </main>
   )

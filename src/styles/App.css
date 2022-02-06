@@ -211,6 +211,10 @@ body,
   cursor: default;
 }
 
+.statistics-container * {
+  margin: 0 10px;
+}
+
 @media screen and (max-width: 600px) {
   .tenzies-container {
     font-size: 12px;
