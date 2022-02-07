@@ -24,39 +24,65 @@ const App = () => {
   const firstRenderRef = useRef(true)
 
   const timeIntervalRef = useRef(0)
+
+  const firstPlaythrough = useRef(true)
   
+  // GAME WON HANDLER
   useEffect(() => {
     const value = dice[0].value
     if(dice.every(dice => dice.isHeld) && dice.every(dice => dice.value === value))
     setGameWon(true)
   }, [dice])
-  
+
+  // SAVE BEST TIME TO LOCAL STORAGE
+    useEffect(() => {
+        if(gameWon) {
+          if (firstPlaythrough.current) {
+            firstPlaythrough.current = false
+            localStorage.setItem("bestTime", JSON.stringify({...timer}))
+          }
+
+          const localStorageTime = JSON.parse(localStorage.getItem("bestTime"))
+          const currentBestTime = parseInt(localStorageTime.minutes + localStorageTime.seconds)
+          const newTime = parseInt(timer.minutes + timer.seconds)
+
+
+          if (newTime < currentBestTime) {
+            localStorage.setItem("bestTime", JSON.stringify({...timer}))
+          }
+      }
+    }, [gameWon]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // TIMER HANDLER 
   useEffect(() => {
 
-
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false
-    } else {
-      if(!timeIntervalRef.current) {
-        timeIntervalRef.current = setInterval(() => {
-              setTimer(oldTime => ({
-                minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
-                : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
-                : oldTime.minutes,
-                seconds: parseInt(oldTime.seconds) === 59 ? "00" 
-                : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
-                : (parseInt(oldTime.seconds) + 1).toString()
-              }))
-            }, 1000)
-      }
-    }
-
-    if (gameWon) {
+    if(gameWon) {
+      firstRenderRef.current = true
       clearInterval(timeIntervalRef.current)
+      timeIntervalRef.current = 0
+    } else {
+      if (firstRenderRef.current) {
+        setTimer(({ minutes: "00", seconds: "00" }))
+        firstRenderRef.current = false
+      } else {
+        if(!timeIntervalRef.current) {
+          timeIntervalRef.current = setInterval(() => {
+            setTimer(oldTime => ({
+              minutes: parseInt(oldTime.seconds) === 59 && parseInt(oldTime.minutes) < 9 ? "0" + (parseInt(oldTime.minutes) + 1).toString()
+              : parseInt(oldTime.seconds) === 59 ? (parseInt(oldTime.minutes) + 1).toString() 
+              : oldTime.minutes,
+              seconds: parseInt(oldTime.seconds) === 59 ? "00" 
+              : parseInt(oldTime.seconds) < 9 ? "0" + (parseInt(oldTime.seconds) + 1).toString()
+              : (parseInt(oldTime.seconds) + 1).toString()
+            }))
+          }, 1000)
+        }
+      }
     }
 
   }, [dice, gameWon])
 
+  // GENERATE NEW DICE
   const newDice = () => {
     if(gameWon){
       setGameWon(false)
@@ -74,6 +100,7 @@ const App = () => {
     }
   }
 
+  // SET HELD VALUE TO TRUE IF DICE ARE HELD
   const holdDice = (diceId) => {
     setDice(oldDice => oldDice.map(dice => {
       return diceId === dice.id
@@ -82,6 +109,7 @@ const App = () => {
     }))
   }
 
+  // UPDATES ROLL AMOUNT ON GAME WON
   const updateRollAmount = () => {
     if(gameWon)
       setAmountRolls(0)
@@ -105,25 +133,18 @@ const App = () => {
       {gameWon && <Confetti />}
       <h1 className="tenzies-header">Tenzies</h1>
       <p className="tenzies-description">
-        {gameWon ? "You've Won!" : 
-        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
+        {
+        gameWon ? "You've Won!" : 
+        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."
+        }
       </p>
       <div className="tenzies-dice-container">
         {diceElements}
       </div>
-      <button 
-        className="tenzies-roll-button" 
-        onClick={() => {
-          newDice();
-          updateRollAmount();
-        }}
-      >
+      <button className="tenzies-roll-button" onClick={() => {newDice(); updateRollAmount();}}>
         {gameWon ? "Play Again" : "Roll"}
       </button>
-      <Statistics 
-        amountRolls={amountRolls}
-        timer={timer}
-      />
+      <Statistics amountRolls={amountRolls} timer={timer} />
     </main>
   )
 }

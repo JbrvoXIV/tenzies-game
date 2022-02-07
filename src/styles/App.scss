@@ -135,10 +135,6 @@ body {
     }
 }
 
-// .roll-counter {
-//     cursor: default;
-// }
-
 .statistics-container {
     width: 100%;
     display: flex;
@@ -146,6 +142,10 @@ body {
     align-items: center;
     font-size: 1.2em;
     cursor: default;
+
+    & * {
+        margin: 0 10px;
+    }
 }
 
 @include responsiveText {
