@@ -21,11 +21,11 @@ const App = () => {
 
   const [timer, setTimer] = useState({ minutes: "00", seconds: "00" })
 
-  const [bestTime, setBestTime] = useState({ minutes: "00", seconds: "00" })
-
   const firstRenderRef = useRef(true)
 
   const timeIntervalRef = useRef(0)
+
+  const firstPlaythrough = useRef(true)
   
   // GAME WON HANDLER
   useEffect(() => {
@@ -33,21 +33,25 @@ const App = () => {
     if(dice.every(dice => dice.isHeld) && dice.every(dice => dice.value === value))
     setGameWon(true)
   }, [dice])
-  
-  // SAVE BEST TIME TO LOCAL STORAGE
-  useEffect(() => {
-    if(gameWon) {
-      localStorage.setItem("bestTime", JSON.stringify(timer))
 
-      parseInt(bestTime.minutes) + parseInt(bestTime.seconds) 
-      > parseInt(JSON.parse(localStorage.getItem("bestTime")).minutes) + parseInt(JSON.parse(localStorage.getItem("bestTime")).seconds)
-      ? setBestTime(({
-          minutes: JSON.parse(localStorage.getItem("bestTime")).minutes,
-          seconds: JSON.parse(localStorage.getItem("bestTime")).seconds
-        }))
-      : setBestTime(oldTime => ({...oldTime}))
-    }
-  }, [gameWon])
+  // SAVE BEST TIME TO LOCAL STORAGE
+    useEffect(() => {
+        if(gameWon) {
+          if (firstPlaythrough.current) {
+            firstPlaythrough.current = false
+            localStorage.setItem("bestTime", JSON.stringify({...timer}))
+          }
+
+          const localStorageTime = JSON.parse(localStorage.getItem("bestTime"))
+          const currentBestTime = parseInt(localStorageTime.minutes + localStorageTime.seconds)
+          const newTime = parseInt(timer.minutes + timer.seconds)
+
+
+          if (newTime < currentBestTime) {
+            localStorage.setItem("bestTime", JSON.stringify({...timer}))
+          }
+      }
+    }, [gameWon]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // TIMER HANDLER 
   useEffect(() => {
@@ -78,6 +82,7 @@ const App = () => {
 
   }, [dice, gameWon])
 
+  // GENERATE NEW DICE
   const newDice = () => {
     if(gameWon){
       setGameWon(false)
@@ -95,6 +100,7 @@ const App = () => {
     }
   }
 
+  // SET HELD VALUE TO TRUE IF DICE ARE HELD
   const holdDice = (diceId) => {
     setDice(oldDice => oldDice.map(dice => {
       return diceId === dice.id
@@ -127,26 +133,18 @@ const App = () => {
       {gameWon && <Confetti />}
       <h1 className="tenzies-header">Tenzies</h1>
       <p className="tenzies-description">
-        {gameWon ? "You've Won!" : 
-        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
+        {
+        gameWon ? "You've Won!" : 
+        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."
+        }
       </p>
       <div className="tenzies-dice-container">
         {diceElements}
       </div>
-      <button 
-        className="tenzies-roll-button" 
-        onClick={() => {
-          newDice();
-          updateRollAmount();
-        }}
-      >
+      <button className="tenzies-roll-button" onClick={() => {newDice(); updateRollAmount();}}>
         {gameWon ? "Play Again" : "Roll"}
       </button>
-      <Statistics 
-        amountRolls={amountRolls}
-        timer={timer}
-        bestTime={bestTime}
-      />
+      <Statistics amountRolls={amountRolls} timer={timer} />
     </main>
   )
 }
