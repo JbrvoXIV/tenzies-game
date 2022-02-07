@@ -63,6 +63,8 @@ body,
   -webkit-margin-end: 0;
           margin-inline-end: 0;
   cursor: default;
+  -webkit-animation: dropIn 1.5s;
+          animation: dropIn 1.5s;
 }
 
 .tenzies-description {
@@ -77,6 +79,8 @@ body,
   -webkit-margin-end: 0;
           margin-inline-end: 0;
   cursor: default;
+  -webkit-animation: dropIn 1.5s;
+          animation: dropIn 1.5s;
 }
 
 .tenzies-roll-button {
@@ -90,6 +94,8 @@ body,
   border: 1px solid black;
   color: white;
   cursor: pointer;
+  -webkit-animation: dropIn 1.5s;
+          animation: dropIn 1.5s;
 }
 
 .tenzies-roll-button:active {
@@ -106,6 +112,8 @@ body,
       grid-template: minmax(50px, 80px) minmax(50px, 80px)/minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px) minmax(50px, 80px);
   gap: 20px;
   margin: 10px;
+  -webkit-animation: dropIn 1.2s;
+          animation: dropIn 1.2s;
 }
 
 .tenzies-dice-container > .tenzies-dice {
@@ -209,10 +217,38 @@ body,
           align-items: center;
   font-size: 1.2em;
   cursor: default;
+  -webkit-animation: dropIn 1.5s;
+          animation: dropIn 1.5s;
 }
 
 .statistics-container * {
   margin: 0 10px;
+}
+
+@-webkit-keyframes dropIn {
+  from {
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes dropIn {
+  from {
+    -webkit-transform: translateY(-100%);
+            transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media screen and (max-width: 600px) {
